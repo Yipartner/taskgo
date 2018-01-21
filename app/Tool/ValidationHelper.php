@@ -23,11 +23,7 @@ class ValidationHelper
     {
         $validator = Validator::make($inputs,$rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => '表单验证出错'
-            ]);
-        }
+        return $validator;
     }
 
     public static function getInputData(Request $request,array $rules)
