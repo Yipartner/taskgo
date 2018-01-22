@@ -16,8 +16,19 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('mobile')->unique();
             $table->string('password');
+            $table->string('avatar');
+            $table->string('sex');
+            $table->string('wechat_id');
+            $table->string('qq_id');
+            $table->datetime('birth');
+            $table->tinyInteger('status')->default(0); //0.未认证  1.已认证;
+            $table->string('stuwithcard_pic');
+            $table->string('id_pic');
+            $table->string('stucard_pic');
+            $table->bigInteger('level')->default(0);
+            $table->bigInteger('exp')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
