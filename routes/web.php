@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 include 'water.php';
+include 'thing.php';

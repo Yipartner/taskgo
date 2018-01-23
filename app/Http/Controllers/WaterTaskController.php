@@ -25,7 +25,7 @@ class WaterTaskController extends Controller
         if ($res->fails()){
             return response()->json([
                 'code' => 1001,
-                'message' => '表单验证失败'
+                'message' => $res->errors()
             ]);
         }
         else{
