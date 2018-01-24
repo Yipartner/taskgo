@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('mobile')->unique();
             $table->string('password');
-            $table->string('avatar');
+            $table->string('avatar')->default("http://oz3rf0wt0.bkt.clouddn.com/18-1-22/15799237.jpg");
             $table->string('sex');
             $table->string('wechat_id');
             $table->string('qq_id');
