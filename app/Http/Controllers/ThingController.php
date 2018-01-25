@@ -57,11 +57,16 @@ class ThingController extends Controller
         }
         else{
             $taskInfo=ValidationHelper::getInputData($request,$rules);
-            $this->thingService->acceptTask($taskInfo);
+            if ($this->thingService->acceptTask($taskInfo))
             return response()->json([
                 'code' =>1000,
                 'message'=> '任务接受'
             ]);
+            else
+                return response()->json([
+                    'code' => 3003,
+                    'message' => '请勿重复接取'
+                ]);
         }
     }
     public function finishTask(Request $request){
@@ -90,14 +95,35 @@ class ThingController extends Controller
         $taskList=$this->thingService->showTaskList();
         return response()->json([
             'code' => 1000,
-            'taskList' => $taskList
+            'data' => $taskList
         ]);
     }
     public function showTaskById($task_id){
         $taskInfo=$this->thingService->showTaskById($task_id);
         return response()->json([
             'code' => 1000,
-            'task' => $taskInfo
+            'data' => $taskInfo
         ]);
+    }
+    public function showUserList(Request $request){
+        $rules=[
+            'task_type' =>'required',
+            'task_id' =>'required'
+        ];
+        $res=ValidationHelper::validateCheck($request->all(),$rules);
+        if ($res->fails()){
+            return response()->json([
+                'code' =>2001,
+                'message' => $res->errors()
+            ]);
+        }
+        else{
+            $taskInfo=ValidationHelper::getInputData($request,$rules);
+            $userList=$this->thingService->showTaskUser($taskInfo);
+            return response()->json([
+                'code' => 1000,
+                'data' =>$userList
+            ]);
+        }
     }
 }
