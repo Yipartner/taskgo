@@ -42,13 +42,13 @@ class WaterTaskController extends Controller
         if ($taskList->first()) {
             return response()->json([
                 'code' => 1000,
-                'taskList'=> $taskList
+                'data'=> $taskList
         ]);
         }
         else{
             return response()->json([
                 'code' =>1002,
-                'taskList'=> null
+                'data'=> null
             ]);
         }
     }
@@ -57,13 +57,13 @@ class WaterTaskController extends Controller
         if ($taskList->first()) {
             return response()->json([
                 'code' => 1000,
-                'taskList'=> $taskList
+                'data'=> $taskList
             ]);
         }
         else{
             return response()->json([
                 'code' =>1002,
-                'taskList'=> null
+                'data'=> null
             ]);
         }
     }
