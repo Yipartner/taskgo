@@ -6,8 +6,10 @@
  * Time: 上午10:21
  */
 
-namespace App\Service;
+namespace App\Services;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -20,9 +22,13 @@ class UserService
         }
         else
         {
+            $time=new Carbon();
+            //name 默认昵称为登录号码
             DB::table('users')->insert([
-                $userInfo->type => $userInfo->value,
-                'password' => $userInfo->password
+                'name' => $userInfo['value'],
+                $userInfo['type'] => $userInfo['value'],
+                'password' => bcrypt($userInfo['password']),
+                'created_at'=> $time,
             ]);
             return true;
         }
@@ -57,39 +63,17 @@ class UserService
     }
 
     // identifier 1. mobile 2. weixin 3. qq
-    public function loginBymobile($data)
-    {
-        $user  = DB::table('users')->where('mobile', $data['value'])->first();
-        if ($user == null)
-            return -1;
-        elseif($user['password'] != $data['password'])
-            return -2;
-        else
-            return $user->id;
-    }
-
-    public function loginByOther($data)
+    public function login($data)
     {
         $user  = DB::table('users')->where($data['type'], $data['value'])->first();
+//        dd(Hash::check($data['password'], $user->password));
         if ($user == null)
-        {
-            $newdata = [
-                'type' => $data['type'],
-                'value' => $data['value'],
-                'password' => '123456'
-            ];
-            if($this->register($newdata))
-            {
-                return $this->getUserId($newdata);
-            }
-        }
-        elseif($user['password'] != $data['password'])
+            return -1;
+        elseif (!Hash::check($data['password'], $user->password))
             return -2;
         else
             return $user->id;
     }
 
-
-    
 
 }
