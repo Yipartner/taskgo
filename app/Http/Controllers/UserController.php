@@ -241,4 +241,18 @@ class UserController extends Controller
                 'message' => '认证失败,请补全信息'
             ]);
     }
+
+    public function updateLevel(Request $request)
+    {
+        if($this->userService->updateLevel($request->all()))
+            return response()->json([
+                'code' => 6000,
+                'message' => '更新成功'
+            ]);
+        else
+            return response()->json([
+                'code' => 6005,
+                'message' => '更新等级失败'
+            ]);
+    }
 }

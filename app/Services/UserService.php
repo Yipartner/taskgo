@@ -159,6 +159,15 @@ class UserService
             return false;
     }
 
+    public function updateLevel($data)
+    {
+        return $this->updateUserInfo([
+            'id' => $data['user_id'],
+            'exp' => $data['exp'],
+            'level' => $data['level']
+        ]);
+    }
+
 
 
 
