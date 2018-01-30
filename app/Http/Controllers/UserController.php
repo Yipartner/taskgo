@@ -205,7 +205,7 @@ class UserController extends Controller
                 'code' => 6009,
                 'message' => '请先绑定手机号'
             ]);
-        if($code == -1)
+        elseif($code == -1)
             return response()->json([
                 'code' => 6008,
                 'message' => '用户已认证无需重复认证'
@@ -219,6 +219,26 @@ class UserController extends Controller
             return response()->json([
                 'code' => 6000,
                 'message' => '更新成功'
+            ]);
+    }
+
+    public function updateAuthStatus(Request $request)
+    {
+        $code = $this->userService->updateAuthStatus($request->user_id);
+        if ($code == -1)
+            return response()->json([
+                'code' => 6008,
+                'message' => '用户已认证无需重复认证'
+            ]);
+        elseif($code == 1)
+            return response()->json([
+                'code' => 6000,
+                'message' => '认证成功'
+            ]);
+        else
+            return response()->json([
+                'code' => 6010,
+                'message' => '认证失败,请补全信息'
             ]);
     }
 }

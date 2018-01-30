@@ -12,5 +12,6 @@ Route::get('/user/info/show/{userId}', 'UserController@getUserInfo');
 Route::post('/user/info/update', 'UserController@updateUserInfo');
 Route::post('/user/bind', 'UserController@bindLoginAccount');
 Route::post('/user/info/addAuth', 'UserController@addAuthInfo');
+Route::post('/user/info/updateStatus', 'UserController@updateAuthStatus');
 
 Route::post('/user/test', 'UserController@test');

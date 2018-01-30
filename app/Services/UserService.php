@@ -7,6 +7,7 @@
  */
 
 namespace App\Services;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -132,6 +133,30 @@ class UserService
             return 1;
         else
             return 0;
+    }
+
+    public function updateAuthStatus($userId)
+    {
+        $user  = DB::table('users')->where('id', $userId)->first();
+        if($user->status)
+            return -1;
+        $rules = ['stuwithcard_pic','id_pic','stucard_pic'];
+        $count = 0;
+        foreach ($rules as $rule)
+        {
+            if(isset($user->$rule))
+                $count++;
+        }
+        if($count == 3)
+        {
+            $this->updateUserInfo([
+                'id' => $userId,
+                'status' => 1
+            ]);
+            return true;
+        }
+        else
+            return false;
     }
 
 
