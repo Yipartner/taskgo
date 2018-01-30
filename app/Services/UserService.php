@@ -51,7 +51,11 @@ class UserService
 
     public function updateUserInfo($userInfo)
     {
-        if (DB::table('users')->where('id', $userInfo['userId'])->update($userInfo))
+        $time=new Carbon();
+        $userInfo = array_merge($userInfo,[
+            'updated_at' => $time,
+        ]);
+        if (DB::table('users')->where('id', $userInfo['id'])->update($userInfo))
             return true;
         else
             return false;
@@ -59,7 +63,15 @@ class UserService
 
     public function getUserInfo($userId)
     {
-        return  DB::table('users')->where('id', $userId)->first();
+        $user = DB::table('users')->where('id', $userId)->first();
+        $data = [];
+        $rules = ['name','mobile','avatar','sex','wechat_id','qq_id','birth','status','stuwithcard_pic','id_pic','stucard_pic','level','exp'];
+        foreach ($rules as $key) {
+            $data[$key] = $user->$key;
+        }
+        if($data['birth'])
+            $data['birth'] = substr($data['birth'],0,10);
+        return $data;
     }
 
     // identifier 1. mobile 2. weixin 3. qq
