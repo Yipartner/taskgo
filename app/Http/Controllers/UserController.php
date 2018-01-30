@@ -19,9 +19,12 @@ class UserController extends Controller
     {
         $rules = [
             'type' => 'bail|required|in:mobile,wechat_id,qq_id',
-            'value' => 'required',
-            'password' => 'required|min:6|max:20'
+            'value' => 'required'
         ];
+        if($request->type == 'mobile')
+            $rules = array_merge($rules,[
+                'password' => 'required|min:6|max:20',
+            ]);
         $validator =ValidationHelper::validateCheck($request->all(), $rules);
 
         if ($validator->fails()){
@@ -56,9 +59,12 @@ class UserController extends Controller
     {
         $rules = [
             'type' => 'bail|required|in:mobile,wechat_id,qq_id',
-            'value' => 'required',
-            'password' => 'required|min:6|max:20'
+            'value' => 'required'
         ];
+        if($request->type == 'mobile')
+            $rules = array_merge($rules,[
+                'password' => 'required|min:6|max:20',
+            ]);
         $validator =ValidationHelper::validateCheck($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
@@ -140,6 +146,10 @@ class UserController extends Controller
             'type' => 'bail|required|in:mobile,wechat_id,qq_id',
             'value' => 'required'
         ];
+        if($request->type == 'mobile')
+            $rules = array_merge($rules,[
+                'password' => 'required|min:6|max:20',
+            ]);
         $validator =ValidationHelper::validateCheck($request->all(), $rules);
 
         if ($validator->fails()){
@@ -169,6 +179,46 @@ class UserController extends Controller
             return response()->json([
                 'code' => 6000,
                 'message' => '绑定'.$data['type'].'成功'
+            ]);
+    }
+
+    public function addAuthInfo(Request $request)
+    {
+        $rules = [
+            'user_id' => 'required',
+            'stuwithcard_pic' => 'required',
+            'id_pic' => 'required',
+            'stucard_pic' => 'required'
+        ];
+        $validator =ValidationHelper::validateCheck($request->all(), $rules);
+
+        if ($validator->fails()){
+            return response()->json([
+                'code' => 6001,
+                'message' => '表单验证失败'
+            ]);
+        }
+        $data=ValidationHelper::getInputData($request, $rules);
+        $code = $this->userService->addAuthInfo($data);
+        if($code == -2)
+            return response()->json([
+                'code' => 6009,
+                'message' => '请先绑定手机号'
+            ]);
+        if($code == -1)
+            return response()->json([
+                'code' => 6008,
+                'message' => '用户已认证无需重复认证'
+            ]);
+        elseif($code == 0)
+            return response()->json([
+                'code' => 6005,
+                'message' => '更新认证信息失败'
+            ]);
+        else
+            return response()->json([
+                'code' => 6000,
+                'message' => '更新成功'
             ]);
     }
 }

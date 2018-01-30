@@ -27,7 +27,7 @@ class UserService
             DB::table('users')->insert([
                 'name' => $userInfo['value'],
                 $userInfo['type'] => $userInfo['value'],
-                'password' => bcrypt($userInfo['password']),
+                'password' => isset($userInfo['password'])?bcrypt($userInfo['password']):null,
                 'created_at'=> $time,
             ]);
             return true;
@@ -83,7 +83,7 @@ class UserService
 //        dd(Hash::check($data['password'], $user->password));
         if ($user == null)
             return -1;
-        elseif (!Hash::check($data['password'], $user->password))
+        elseif ((isset($user->password)?(!Hash::check($data['password'], $user->password)):false))
             return -2;
         else
             return $user->id;
@@ -104,11 +104,34 @@ class UserService
             return 0;
         else
         {
-            DB::table('users')->where('id', $data['user_id'])->update([
+            $Info =[
                 $data['type'] => $data['value']
-            ]);
+            ];
+            if($data['type'] == 'mobile')
+                $Info = array_merge($Info,[
+                    'password' => bcrypt($data['password']),
+                ]);
+            DB::table('users')->where('id', $data['user_id'])->update($Info);
             return 1;
         }
+    }
+
+    public function addAuthInfo($data)
+    {
+        $user  = DB::table('users')->where('id', $data['user_id'])->first();
+        if(!isset($user->mobile))
+            return -2;
+        elseif($user->status == 1)
+            return -1;
+        elseif($this->updateUserInfo([
+            'id' => $data['user_id'],
+            'stuwithcard_pic' => $data['stuwithcard_pic'],
+            'id_pic' => $data['id_pic'],
+            'stucard_pic' => $data['stucard_pic']
+        ]))
+            return 1;
+        else
+            return 0;
     }
 
 
