@@ -65,10 +65,12 @@ class UserService
     {
         $user = DB::table('users')->where('id', $userId)->first();
         $data = [];
+        //取可以展示的信息
         $rules = ['name','mobile','avatar','sex','wechat_id','qq_id','birth','status','stuwithcard_pic','id_pic','stucard_pic','level','exp'];
         foreach ($rules as $key) {
             $data[$key] = $user->$key;
         }
+        //取前10位 即 1997-07-01 00:00:00 中的年月日
         if($data['birth'])
             $data['birth'] = substr($data['birth'],0,10);
         return $data;
@@ -86,6 +88,30 @@ class UserService
         else
             return $user->id;
     }
+
+    public function binding($data)
+    {
+        // 只允许绑定手机号
+        $id = $this->getUserId($data);
+        if ($id > 0)
+            return -2;
+        $user  = DB::table('users')->where('id', $data['user_id'])->first();
+        // 这样写才能访问到对象的键值
+        $type = $data['type'];
+        if ($user == null)
+            return -1;
+        elseif ($user ->$type != null)
+            return 0;
+        else
+        {
+            DB::table('users')->where('id', $data['user_id'])->update([
+                $data['type'] => $data['value']
+            ]);
+            return 1;
+        }
+    }
+
+
 
 
 }

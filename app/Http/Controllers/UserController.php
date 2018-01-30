@@ -71,7 +71,7 @@ class UserController extends Controller
         if ($userId == -1) {
             return response()->json([
                 'code' => 6003,
-                'message' => '用户未注册'
+                'message' => '用户不存在'
             ]);
         }
         elseif($userId == -2){
@@ -124,14 +124,51 @@ class UserController extends Controller
         if($this->userService->updateUserInfo($userInfo))
             return response()->json([
                 'code' => 6000,
-                'message' => '请求成功',
-                'data' => $userInfo
+                'message' => '更新成功'
             ]);
         else
             return response()->json([
                 'code' => 6005,
-                'message' => '更新失败',
-                'data' => $userInfo
+                'message' => '更新失败'
+            ]);
+    }
+
+    public function bindLoginAccount(Request $request)
+    {
+        $rules = [
+            'user_id' => 'required',
+            'type' => 'bail|required|in:mobile,wechat_id,qq_id',
+            'value' => 'required'
+        ];
+        $validator =ValidationHelper::validateCheck($request->all(), $rules);
+
+        if ($validator->fails()){
+            return response()->json([
+                'code' => 6001,
+                'message' => '表单验证失败'
+            ]);
+        }
+        $data=ValidationHelper::getInputData($request, $rules);
+        $code = $this->userService->binding($data);
+        if($code == -2)
+            return response()->json([
+                'code' => 6007,
+                'message' => '该号码已绑定'
+            ]);
+        elseif($code == -1)
+            return response()->json([
+                'code' => 6003,
+                'message' => '用户不存在'
+                ]);
+        elseif($code == 0)
+            return response()->json([
+                'code' => 6006,
+                'message' => '用户已绑定该登录方式'
+            ]);
+        else
+            return response()->json([
+                'code' => 6000,
+                'message' => '绑定'.$data['type'].'成功'
             ]);
     }
 }
