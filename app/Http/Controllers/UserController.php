@@ -118,7 +118,7 @@ class UserController extends Controller
         if($checkRes == -1)
             return response()->json([
                 'code' => 6011,
-                'message' => 'token无效'
+                'message' => 'token不存在'
             ]);
         else if($checkRes == 0)
             return response()->json([
@@ -196,7 +196,7 @@ class UserController extends Controller
         if($code == -2)
             return response()->json([
                 'code' => 6007,
-                'message' => '该号码已绑定'
+                'message' => '该号码已被绑定'
             ]);
         elseif($code == -1)
             return response()->json([

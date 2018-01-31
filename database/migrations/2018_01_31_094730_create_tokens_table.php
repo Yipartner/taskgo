@@ -19,7 +19,7 @@ class CreateTokensTable extends Migration
             $table->string('token',45);
             $table->string('ip',45);
             $table->timestamps();
-            $table->bigInteger('expires_at');
+            $table->datetime('expires_at');
         });
     }
 
