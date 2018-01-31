@@ -15,4 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+include 'water.php';
 include 'user.php';
