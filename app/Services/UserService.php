@@ -167,7 +167,22 @@ class UserService
             'level' => $data['level']
         ]);
     }
+    public function resetPassword($data)
+    {
+        $user  = DB::table('users')->where('id', $data['user_id'])->first();
 
+        if ((isset($user->password)?(Hash::check($data['old_password'], $user->password)):true))
+        {
+            $this->updateUserInfo([
+                'id' => $data['user_id'],
+                'password' => bcrypt($data['new_password'])
+            ]);
+            return true;
+        }
+        else
+            return false;
+
+    }
 
 
 

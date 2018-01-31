@@ -8,6 +8,7 @@
 
 Route::post('/user/register', 'UserController@register');
 Route::post('/user/login', 'UserController@login');
+Route::post('/user/resetPassword', 'UserController@resetPassword');
 Route::get('/user/info/show/{userId}', 'UserController@getUserInfo');
 Route::post('/user/info/update', 'UserController@updateUserInfo');
 Route::post('/user/bind', 'UserController@bindLoginAccount');

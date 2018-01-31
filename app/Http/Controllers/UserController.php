@@ -255,4 +255,31 @@ class UserController extends Controller
                 'message' => '更新等级失败'
             ]);
     }
+    public function resetPassword(Request $request)
+    {
+        $rules = [
+            'user_id' => 'required',
+            'old_password' => 'required',
+            'new_password' => 'required|string|min:6|max:20'
+        ];
+        $validator =ValidationHelper::validateCheck($request->all(), $rules);
+
+        if ($validator->fails()){
+            return response()->json([
+                'code' => 6001,
+                'message' => '表单验证失败'
+            ]);
+        }
+        $data=ValidationHelper::getInputData($request, $rules);
+        if($this->userService->resetPassword($data))
+            return response()->json([
+                'code' => 6000,
+                'message' => '密码修改成功'
+            ]);
+        else
+            return response()->json([
+                'code' => 6005,
+                'message' => '密码修改失败,原密码错误'
+            ]);
+    }
 }
