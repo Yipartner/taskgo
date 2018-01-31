@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TokenService;
 use App\Services\UserService;
 use App\Tool\ValidationHelper;
 use Illuminate\Http\Request;
@@ -9,10 +10,12 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     private $userService;
+    private $tokenService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService,TokenService $tokenService)
     {
         $this->userService = $userService;
+        $this->tokenService = $tokenService;
     }
 
     public function register(Request $request)
@@ -73,7 +76,7 @@ class UserController extends Controller
             ]);
         }
         $userId = $this->userService->login($request->all());
-        //$tokenStr = $this->tokenService->makeToken($user->id, $request->ip());
+        $tokenStr = $this->tokenService->makeToken($userId, $request->ip());
         if ($userId == -1) {
             return response()->json([
                 'code' => 6003,
@@ -92,11 +95,41 @@ class UserController extends Controller
                 'message' => '登陆成功',
                 'data' => [
                     'user_id' => $userId,
-                    //'token' => $tokenStr,
+                    'token' => $tokenStr,
                 ]
             ]);
         }
 
+    }
+
+    public function logout(Request $request)
+    {
+        $this->tokenService->deleteToken($request->user_id);
+
+        return response()->json([
+            'code' => 6000,
+            'message' => '退出成功'
+        ]);
+    }
+
+    public function checkToken(Request $request)
+    {
+        $checkRes = $this->tokenService->verifyToken($request->tokenStr);
+        if($checkRes == -1)
+            return response()->json([
+                'code' => 6011,
+                'message' => 'token无效'
+            ]);
+        else if($checkRes == 0)
+            return response()->json([
+                'code' => 6012,
+                'message' => 'token过期'
+            ]);
+        else
+            return response()->json([
+                'code' => 6000,
+                'message' => '验证通过'
+            ]);
     }
 
     public function getUserInfo($userId)
@@ -255,6 +288,7 @@ class UserController extends Controller
                 'message' => '更新等级失败'
             ]);
     }
+
     public function resetPassword(Request $request)
     {
         $rules = [
