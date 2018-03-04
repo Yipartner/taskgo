@@ -91,6 +91,12 @@ class TokenService
                 return 0;
             }
         }
+    }
 
+    public function getUserByToken($tokenStr)
+    {
+        $tokenInfo = getToken($tokenStr);
+        $userInfo=DB::table('users')->where('user_id',$tokenInfo->user_id)->first();
+        return $userInfo;
     }
 }
