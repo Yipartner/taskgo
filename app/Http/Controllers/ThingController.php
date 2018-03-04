@@ -14,12 +14,11 @@ class ThingController extends Controller
     {
         $this->thingService = $thingTaskService;
     }
-
+//TODO
     public function addTask(Request $request)
     {
-
+        $user_id=$request->user->user_id;
         $rules = [
-            'user_id' => 'required',
             'name' => 'required',
             'type' => 'required',
             'picture_url' => 'required',
@@ -35,6 +34,7 @@ class ThingController extends Controller
         }
         else{
             $taskInfo=ValidationHelper::getInputData($request,$rules);
+            $taskInfo['user_id']=$user_id;
             $this->thingService->addTask($taskInfo);
             return response()->json([
                 'code' => 1000,
@@ -43,8 +43,8 @@ class ThingController extends Controller
         }
     }
     public function acceptTask(Request $request){
+        $user_id=$request->user->user_id;
         $rules=[
-            'user_id' => 'required',
             'task_id' => 'required',
             'task_type' => 'required'
         ];
@@ -57,6 +57,7 @@ class ThingController extends Controller
         }
         else{
             $taskInfo=ValidationHelper::getInputData($request,$rules);
+            $taskInfo['user_id']=$user_id;
             if ($this->thingService->acceptTask($taskInfo))
             return response()->json([
                 'code' =>1000,
@@ -69,6 +70,7 @@ class ThingController extends Controller
                 ]);
         }
     }
+    //TODO 权限
     public function finishTask(Request $request){
         $rules=[
             'task_id'=>'required',
