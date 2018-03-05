@@ -77,6 +77,12 @@ class UserService
         return $data;
     }
 
+    public function getSimpleUserInfo($userId)
+    {
+        $user = DB::table('users')->where('id', $userId)->select('id','name','avatar')->first();
+        return $user;
+    }
+
     // identifier 1. mobile 2. weixin 3. qq
     public function login($data)
     {

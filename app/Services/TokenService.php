@@ -95,8 +95,8 @@ class TokenService
 
     public function getUserByToken($tokenStr)
     {
-        $tokenInfo = getToken($tokenStr);
-        $userInfo=DB::table('users')->where('user_id',$tokenInfo->user_id)->first();
+        $tokenInfo = $this->getToken($tokenStr);
+        $userInfo=DB::table('users')->where('id',$tokenInfo->user_id)->select('id','name','avatar')->first();
         return $userInfo;
     }
 }
