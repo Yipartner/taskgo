@@ -16,7 +16,7 @@ class WaterTaskController extends Controller
     }
 
     public function addTask(Request $request){
-        $user_id=$request->user->user_id;
+        $user_id=$request->user->id;
         $rules=[
             'address' =>'required',
             'type'    =>'required'
