@@ -39,6 +39,10 @@ class TokenMiddleware
                 'message' => 'token已过期，请重新登录'
             ]);
         else
+        {
+            $userInfo = $this->tokenService->getUserByToken($request->header('token'));
+            $request->user = $userInfo;
             return $next($request);
+        }
     }
 }

@@ -104,7 +104,7 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        $this->tokenService->deleteToken($request->user_id);
+        $this->tokenService->deleteToken($request->user->id);
 
         return response()->json([
             'code' => 6000,
@@ -132,9 +132,9 @@ class UserController extends Controller
             ]);
     }
 
-    public function getUserInfo($userId)
+    public function getUserInfo(Request $request)
     {
-        $userInfo = $this->userService->getUserInfo($userId);
+        $userInfo = $this->userService->getUserInfo($request->user->id);
         return response()->json([
         'code' => 6000,
         'message' => '请求成功',
@@ -145,7 +145,6 @@ class UserController extends Controller
     public function updateUserInfo(Request $request)
     {
         $rules = [
-            'id' => 'required',
             'avatar' => 'required',
             'name' => 'required',
             'sex' => 'required',
@@ -160,6 +159,8 @@ class UserController extends Controller
             ]);
         }
         $userInfo=ValidationHelper::getInputData($request, $rules);
+        $userId = $request->user->id;
+        $userInfo['id'] = $userId;
         if($this->userService->updateUserInfo($userInfo))
             return response()->json([
                 'code' => 6000,
@@ -175,7 +176,6 @@ class UserController extends Controller
     public function bindLoginAccount(Request $request)
     {
         $rules = [
-            'user_id' => 'required',
             'type' => 'bail|required|in:mobile,wechat_id,qq_id',
             'value' => 'required'
         ];
@@ -192,6 +192,8 @@ class UserController extends Controller
             ]);
         }
         $data=ValidationHelper::getInputData($request, $rules);
+        $userId = $request->user->id;
+        $data['user_id'] = $userId;
         $code = $this->userService->binding($data);
         if($code == -2)
             return response()->json([
@@ -218,7 +220,6 @@ class UserController extends Controller
     public function addAuthInfo(Request $request)
     {
         $rules = [
-            'user_id' => 'required',
             'stuwithcard_pic' => 'required',
             'id_pic' => 'required',
             'stucard_pic' => 'required'
@@ -232,6 +233,8 @@ class UserController extends Controller
             ]);
         }
         $data=ValidationHelper::getInputData($request, $rules);
+        $userId = $request->user->id;
+        $data['user_id'] = $userId;
         $code = $this->userService->addAuthInfo($data);
         if($code == -2)
             return response()->json([
@@ -257,7 +260,7 @@ class UserController extends Controller
 
     public function updateAuthStatus(Request $request)
     {
-        $code = $this->userService->updateAuthStatus($request->user_id);
+        $code = $this->userService->updateAuthStatus($request->user->id);
         if ($code == -1)
             return response()->json([
                 'code' => 6008,
@@ -292,7 +295,6 @@ class UserController extends Controller
     public function resetPassword(Request $request)
     {
         $rules = [
-            'user_id' => 'required',
             'old_password' => 'required',
             'new_password' => 'required|string|min:6|max:20'
         ];
@@ -305,6 +307,8 @@ class UserController extends Controller
             ]);
         }
         $data=ValidationHelper::getInputData($request, $rules);
+        $userId = $request->user->id;
+        $data['user_id'] = $userId;
         if($this->userService->resetPassword($data))
             return response()->json([
                 'code' => 6000,
