@@ -53,6 +53,21 @@ class WaterTaskController extends Controller
             ]);
         }
     }
+    public function showTaskByStatus($status){
+        $taskList=$this->waterService->showTaskByStatus($status);
+        if ($taskList->first()) {
+            return response()->json([
+                'code' => 1000,
+                'data'=> $taskList
+            ]);
+        }
+        else{
+            return response()->json([
+                'code' =>1002,
+                'data'=> null
+            ]);
+        }
+    }
     public function showTaskByUser($userId){
         $taskList=$this->waterService->showTaskByUser($userId);
         if ($taskList->first()) {
