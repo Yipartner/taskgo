@@ -75,6 +75,13 @@ class WaterTaskController extends Controller
             'message' => '任务接受'
         ]);
     }
+    public function acceptAllTask(){
+        $this->waterService->acceptAllTask();
+        return response()->json([
+            'code' => 1000,
+            'message' => '所有任务接受'
+        ]);
+    }
     public function finishTask($taskId){
         $this->waterService->finishTask($taskId);
         return response()->json([

@@ -41,4 +41,9 @@ class WaterTaskService
         $tasks=DB::table('water_tasks')->where('user_id',$userId)->get();
         return $tasks;
     }
+    public function acceptAllTask(){
+        DB::table('water_tasks')->where('id','>',0)->update([
+            'status' => 1
+        ]);
+    }
 }
