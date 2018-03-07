@@ -57,7 +57,8 @@ class ThingController extends Controller
         $avatar=$request->user->avatar;
         $rules = [
             'task_id' => 'required',
-            'task_type' => 'required'
+            'task_type' => 'required',
+            'task_name' => 'required'
         ];
         $res = ValidationHelper::validateCheck($request->all(), $rules);
         if ($res->fails()) {
