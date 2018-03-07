@@ -38,6 +38,7 @@ class ThingTaskService
                 'task_type' => $taskInfo['task_type'],
                 'user_name' => $taskInfo['user_name'],
                 'avatar' => $taskInfo['avatar'],
+                'task_name'=>$taskInfo['task_name'],
                 'created_at' => $time
             ]);
             return true;
