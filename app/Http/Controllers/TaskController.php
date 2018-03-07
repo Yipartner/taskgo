@@ -28,7 +28,9 @@ class TaskController extends Controller
         $thingTask = $this->thingService->showTaskByUserAndStatus($user_id, $status);
         $waterTask = $this->waterService->showTaskByUserAndStatus($user_id, $status);
         foreach ($waterTask as $item) {
-            $item->user_name='lihua';
+            $userInfo=$this->userService->getSimpleUserInfo($item->user_id);
+            $item->user_name=$userInfo->name;
+            $item->user_avatar=$userInfo->avatar;
         }
         dd($waterTask);
     }
