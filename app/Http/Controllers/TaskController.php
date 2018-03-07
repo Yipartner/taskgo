@@ -34,13 +34,14 @@ class TaskController extends Controller
             $item->user_avatar=$userInfo->avatar;
         }}
         $waterTask=$waterTask->toArray();
-        dd($waterTask);
         if ($thingTask->first()){
         foreach ($thingTask as $item) {
             $userInfo=$this->userService->getSimpleUserInfo($item->user_id);
             $item->user_name=$userInfo->name;
             $item->user_avatar=$userInfo->avatar;
         }}
-        $totalTask=array_merge();
+        $thingTask=$thingTask->toArray();
+        $totalTask=array_merge($thingTask,$waterTask);
+        dd($totalTask);
     }
 }
