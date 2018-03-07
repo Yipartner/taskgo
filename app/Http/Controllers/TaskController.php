@@ -27,11 +27,18 @@ class TaskController extends Controller
         $status = $request->task_status;
         $thingTask = $this->thingService->showTaskByUserAndStatus($user_id, $status);
         $waterTask = $this->waterService->showTaskByUserAndStatus($user_id, $status);
+        if ($waterTask->first()){
         foreach ($waterTask as $item) {
             $userInfo=$this->userService->getSimpleUserInfo($item->user_id);
             $item->user_name=$userInfo->name;
             $item->user_avatar=$userInfo->avatar;
-        }
+        }}
+        if ($thingTask->first()){
+        foreach ($thingTask as $item) {
+            $userInfo=$this->userService->getSimpleUserInfo($item->user_id);
+            $item->user_name=$userInfo->name;
+            $item->user_avatar=$userInfo->avatar;
+        }}
         dd($waterTask);
     }
 }
