@@ -22,8 +22,8 @@ class CreateThingsTable extends Migration
             $table->text('remarks');
             // 1:寻物启事  2：失物招领
             $table->integer('type');
-            $table->integer('status')->default(1);
-            // 1:发布中 2:发布者点击完成 3:系统自动完成
+            $table->integer('status')->default(0);
+            // 0:发布中 2:发布者点击完成
             $table->integer('finished_by')->nullable();
             $table->timestamps();
         });

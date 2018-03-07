@@ -41,6 +41,13 @@ class WaterTaskService
         $tasks=DB::table('water_tasks')->where('user_id',$userId)->get();
         return $tasks;
     }
+    public function showTaskByUserAndStatus($user_id,$status){
+        $taskList=DB::table('water_tasks')->where([
+            ['user_id','=',$user_id],
+            ['status','=',$status]
+        ])->get();
+        return $taskList;
+    }
     public function showTaskByStatus($status){
         $tasks=DB::table('water_tasks')->where('status',$status)->get();
         return $tasks;

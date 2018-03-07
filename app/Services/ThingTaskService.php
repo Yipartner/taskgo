@@ -69,7 +69,13 @@ class ThingTaskService
         $taskInfo = DB::table('things')->where('id', $task_id)->first();
         return $taskInfo;
     }
-
+    public function showTaskByUserAndStatus($user_id,$status){
+        $taskList=DB::table('things')->where([
+            ['user_id','=',$user_id],
+            ['status','=',$status]
+        ])->get();
+        return $taskList;
+    }
     public function showTaskUser($taskInfo)
     {
         $userList = DB::table('tasks')->where('task_type', $taskInfo['task_type'])->where('task_id', $taskInfo['task_id'])
