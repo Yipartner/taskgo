@@ -41,6 +41,6 @@ class TaskController extends Controller
             $item->user_name=$userInfo->name;
             $item->user_avatar=$userInfo->avatar;
         }}
-        $totalTask=array_merge()
+        $totalTask=array_merge();
     }
 }
