@@ -6,6 +6,7 @@ use App\Services\TokenService;
 use App\Services\UserService;
 use App\Tool\ValidationHelper;
 use Illuminate\Http\Request;
+use function PHPSTORM_META\elementType;
 
 class UserController extends Controller
 {
@@ -25,9 +26,19 @@ class UserController extends Controller
             'value' => 'required'
         ];
         if($request->type == 'mobile')
+        {
             $rules = array_merge($rules,[
                 'password' => 'required|min:6|max:20',
             ]);
+            $captcha = $this->userService->getCaptcha($request->value);
+            if(!(isset($request->captcha) && $request->captcha != '' && $request->captcha == $captcha))
+            {
+                return response()->json([
+                    'code' => 6001,
+                    'message' => '验证码错误'
+                ]);
+            }
+        }
         $validator =ValidationHelper::validateCheck($request->all(), $rules);
 
         if ($validator->fails()){
@@ -319,5 +330,49 @@ class UserController extends Controller
                 'code' => 6005,
                 'message' => '密码修改失败,原密码错误'
             ]);
+    }
+
+    public function sendMessage(Request $request)
+    {
+        $mobile=$request->mobile;
+
+        $data=[
+            'account' => env('MESSAGE_ACCOUNT'),
+            'pswd' => env('MESSAGE_PASSWORD'),
+            'mobile' => $mobile
+        ];
+
+        $header = "【NEUQer】";
+        $captcha = rand(1000,9999);
+        $msg="您的验证码为".$captcha."，此验证码用于taskgo注册或忘记密码。";
+
+        $newMsg = $header.$msg;
+        $url =  "http://zapi.253.com/msg/HttpBatchSendSM?".http_build_query($data)."&msg=".$newMsg;
+        $res=''.$this->doCurlGetRequest($url);
+        $code = explode(',',$res)[1];
+        if($code == 0)
+        {
+            $this->userService->addCaptcha($mobile,$captcha);
+            return response()->json([
+                'code' => 6000,
+                'message' => '验证码发送成功'
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'code' => 6010,
+                'message' => '验证码发送失败'
+            ]);
+        }
+    }
+
+    public function doCurlGetRequest(string $url)
+    {
+        $con = curl_init($url);
+        curl_setopt($con, CURLOPT_HEADER, false);
+        curl_setopt($con, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($con, CURLOPT_TIMEOUT, 5);
+        return curl_exec($con);
     }
 }

@@ -10,7 +10,7 @@ Route::post('/user/register', 'UserController@register');
 Route::post('/user/login', 'UserController@login');
 
 Route::get('/user/token/check','UserController@checkToken');
-
+Route::get('/user/getCaptcha/{mobile}','UserController@sendMessage');
 
 Route::group(['middleware' => 'token'], function() {
     Route::get('/user/logout', 'UserController@logout');
