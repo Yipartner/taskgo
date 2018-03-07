@@ -187,9 +187,56 @@ class UserService
         }
         else
             return false;
-
     }
 
+    public function forgotPassword($mobile,$new_password)
+    {
+        $time = new Carbon();
+        DB::table('users')->where('mobile', $mobile)->update([
+            'password' => bcrypt($new_password),
+            'updated_at' => $time
+        ]);
+    }
 
+    public function addCaptcha($mobile,$captcha)
+    {
+        $oldCaptcha = $this->getCaptcha($mobile);
+        $time = new Carbon();
+        if($oldCaptcha == null)
+        {
+            DB::table('captchas')->insert([
+                'mobile' => $mobile,
+                'captcha' => $captcha,
+                'created_at' => $time,
+                'updated_at' => $time
+            ]);
+        }
+        else
+        {
+            DB::table('captchas')->where('mobile', $mobile)->update([
+                'captcha' => $captcha,
+                'updated_at' => $time
+            ]);
+        }
+    }
+
+    public function getCaptcha($mobile)
+    {
+        $captcha = DB::table('captchas')->where('mobile', $mobile)->value('captcha');
+        return $captcha;
+    }
+
+    public function checkCaptcha($mobile,$captcha)
+    {
+        $DBcaptcha = $this->getCaptcha($mobile);
+        if($captcha != '' && $captcha == $DBcaptcha)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 }
