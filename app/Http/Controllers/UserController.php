@@ -30,11 +30,10 @@ class UserController extends Controller
             $rules = array_merge($rules,[
                 'password' => 'required|min:6|max:20',
             ]);
-            $captcha = $this->userService->getCaptcha($request->value);
-            if(!(isset($request->captcha) && $request->captcha != '' && $request->captcha == $captcha))
+            if(!$this->userService->checkCaptcha($request->value,$request->captcha))
             {
                 return response()->json([
-                    'code' => 6001,
+                    'code' => 6013,
                     'message' => '验证码错误'
                 ]);
             }
@@ -330,6 +329,35 @@ class UserController extends Controller
                 'code' => 6005,
                 'message' => '密码修改失败,原密码错误'
             ]);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $rules = [
+            'mobile' =>'required',
+            'captcha' => 'required',
+            'new_password' => 'required|string|min:6|max:20'
+        ];
+        $validator =ValidationHelper::validateCheck($request->all(), $rules);
+
+        if ($validator->fails()){
+            return response()->json([
+                'code' => 6001,
+                'message' => '表单验证失败'
+            ]);
+        }
+        if(!$this->userService->checkCaptcha($request->mobile,$request->captcha))
+        {
+            return response()->json([
+                'code' => 6013,
+                'message' => '验证码错误'
+            ]);
+        }
+        $this->userService->forgotPassword($request->mobile,$request->new_password);
+        return response()->json([
+            'code' => 6000,
+            'message' => '密码重置成功'
+        ]);
     }
 
     public function sendMessage(Request $request)
