@@ -17,6 +17,8 @@ class WaterTaskController extends Controller
 
     public function addTask(Request $request){
         $user_id=$request->user->id;
+        $user_name=$request->user->name;
+        $avatar=$request->user->avatar;
         $rules=[
             'address' =>'required',
             'type'    =>'required'
@@ -31,6 +33,8 @@ class WaterTaskController extends Controller
         else{
             $taskInfo=ValidationHelper::getInputData($request,$rules);
             $taskInfo['user_id']=$user_id;
+            $taskInfo['user_name']=$user_name;
+            $taskInfo['avatar']=$avatar;
             $this->waterService->addTask($taskInfo);
             return response()->json([
                 'code' => 1000,

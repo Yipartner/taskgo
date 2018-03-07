@@ -16,6 +16,8 @@ class CreateThingsTable extends Migration
         Schema::create('things', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->string('user_name');
+            $table->string('avatar');
             $table->string('name');
             $table->string('picture_url');
             $table->string('place');

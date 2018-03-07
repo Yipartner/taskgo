@@ -22,6 +22,8 @@ class ThingController extends Controller
     public function addTask(Request $request)
     {
         $user_id = $request->user->id;
+        $user_name=$request->user->name;
+        $avatar=$request->user->avatar;
         $rules = [
             'name' => 'required',
             'type' => 'required',
@@ -38,6 +40,8 @@ class ThingController extends Controller
         } else {
             $taskInfo = ValidationHelper::getInputData($request, $rules);
             $taskInfo['user_id'] = $user_id;
+            $taskInfo['user_name']=$user_name;
+            $taskInfo['avatar']=$avatar;
             $this->thingService->addTask($taskInfo);
             return response()->json([
                 'code' => 1000,
@@ -49,6 +53,8 @@ class ThingController extends Controller
     public function acceptTask(Request $request)
     {
         $user_id = $request->user->id;
+        $user_name=$request->user->name;
+        $avatar=$request->user->avatar;
         $rules = [
             'task_id' => 'required',
             'task_type' => 'required'
@@ -62,6 +68,8 @@ class ThingController extends Controller
         } else {
             $taskInfo = ValidationHelper::getInputData($request, $rules);
             $taskInfo['user_id'] = $user_id;
+            $taskInfo['user_name']=$user_name;
+            $taskInfo['avatar']=$avatar;
             if ($this->thingService->acceptTask($taskInfo))
                 return response()->json([
                     'code' => 1000,
@@ -132,10 +140,6 @@ class ThingController extends Controller
         } else {
             $taskInfo = ValidationHelper::getInputData($request, $rules);
             $userList = $this->thingService->showTaskUser($taskInfo);
-            foreach ($userList as $key => $value) {
-                $userInfo=$this->userService->getSimpleUserInfo($value->user_id);
-                $value=$userInfo;
-            }
             return response()->json([
                 'code' => 1000,
                 'data' => $userList

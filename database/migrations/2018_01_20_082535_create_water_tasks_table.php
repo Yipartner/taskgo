@@ -16,6 +16,8 @@ class CreateWaterTasksTable extends Migration
         Schema::create('water_tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->string('user_name');
+            $table->string('avatar');
             $table->string('address');
             $table->integer('status')->default(0); //0.未接受  1.已接受 2.已完成
             $table->integer('type'); //1.自提 2.送水上门

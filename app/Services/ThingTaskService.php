@@ -69,18 +69,39 @@ class ThingTaskService
         $taskInfo = DB::table('things')->where('id', $task_id)->first();
         return $taskInfo;
     }
-    public function showTaskByUserAndStatus($user_id,$status){
-        $taskList=DB::table('things')->where([
-            ['user_id','=',$user_id],
-            ['status','=',$status]
+
+    public function showTaskByUserAndStatus($user_id, $status)
+    {
+        $taskList = DB::table('things')->where([
+            ['user_id', '=', $user_id],
+            ['status', '=', $status]
         ])->get();
         return $taskList;
     }
+
     public function showTaskUser($taskInfo)
     {
         $userList = DB::table('tasks')->where('task_type', $taskInfo['task_type'])->where('task_id', $taskInfo['task_id'])
-            ->select('user_id')
+            ->select('user_id', 'user_name', 'avatar')
             ->get();
         return $userList;
+    }
+
+    public function showFinishTaskByAccepter($user_id)
+    {
+        $taskList = DB::table('things')->where('finished_by', $user_id)
+            ->select('')
+            ->get();
+        return $taskList;
+    }
+
+    public function showTaskByAccepter($user_id)
+    {
+        $taskList = DB::table('tasks')
+            ->where('user_id', $user_id)
+            ->join('things','things.id','=','tasks.task_id')
+            ->select('things.user_id','things.user_name','things.avatar','things.id','things.name','things.type','things.created_at')
+            ->get();
+        return $taskList;
     }
 }
