@@ -22,6 +22,9 @@ class TaskController extends Controller
         $status=$request->task_status;
         $thingTask=$this->thingService->showTaskByUserAndStatus($user_id,$status);
         $waterTask=$this->waterService->showTaskByUserAndStatus($user_id,$status);
-        dd($waterTask);
+        foreach ($waterTask as $item)
+        {
+            echo $item->user_id;
+        }
     }
 }
