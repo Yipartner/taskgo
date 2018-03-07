@@ -14,6 +14,8 @@ class WaterTaskService
             'user_id' => $taskInfo['user_id'],
             'address' => $taskInfo['address'],
             'type' => $taskInfo['type'],
+            'user_name' => $taskInfo['user_name'],
+            'avatar' => $taskInfo['avatar'],
             'created_at'=> $time,
         ]);
     }

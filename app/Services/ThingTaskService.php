@@ -13,6 +13,8 @@ class ThingTaskService
         $time = new Carbon();
         DB::table('things')->insert([
             'user_id' => $taskInfo['user_id'],
+            'user_name' => $taskInfo['user_name'],
+            'avatar' => $taskInfo['avatar'],
             'name' => $taskInfo['name'],
             'type' => $taskInfo['type'],
             'picture_url' => $taskInfo['picture_url'],
@@ -34,6 +36,8 @@ class ThingTaskService
                 'user_id' => $taskInfo['user_id'],
                 'task_id' => $taskInfo['task_id'],
                 'task_type' => $taskInfo['task_type'],
+                'user_name' => $taskInfo['user_name'],
+                'avatar' => $taskInfo['avatar'],
                 'created_at' => $time
             ]);
             return true;
