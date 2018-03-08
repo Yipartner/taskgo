@@ -102,9 +102,8 @@ class ThingTaskService
 
     public function showTaskByAccepter($user_id)
     {
-        $taskList = DB::table('tasks')
-            ->where('user_id', $user_id)
-            ->join('things','things.id','=','tasks.task_id')
+        $taskList = DB::table('tasks')->where('user_id', $user_id)
+            ->join('things','tasks.task_id','=','things.id')
             ->select('things.user_id','things.user_name','things.avatar','things.id','things.name','things.type','things.created_at')
             ->get();
         return $taskList;

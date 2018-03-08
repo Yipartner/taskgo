@@ -52,7 +52,8 @@ class TaskController extends Controller
 
     public function showAcceptTaskByUserAndStatus(Request $request)
     {
-        $user_id = $request->user->id;
+//        $user_id = $request->user->id;
+        $user_id=1;
         $status = $request->task_status;
         $thingTask=[];
         if ($status == 0) {
