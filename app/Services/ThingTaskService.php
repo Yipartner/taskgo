@@ -95,7 +95,7 @@ class ThingTaskService
     public function showFinishTaskByAccepter($user_id)
     {
         $taskList = DB::table('things')->where('finished_by', $user_id)
-            ->select('')
+            ->select('user_id','user_name','avatar','id','name','type','created_at')
             ->get();
         return $taskList;
     }
