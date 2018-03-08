@@ -6,7 +6,6 @@ use App\Services\TokenService;
 use App\Services\UserService;
 use App\Tool\ValidationHelper;
 use Illuminate\Http\Request;
-use function PHPSTORM_META\elementType;
 
 class UserController extends Controller
 {
@@ -402,5 +401,71 @@ class UserController extends Controller
         curl_setopt($con, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($con, CURLOPT_TIMEOUT, 5);
         return curl_exec($con);
+    }
+
+    public function getFollowers(Request $request)
+    {
+        $userId = $request->user->id;
+        $users = $this->userService->getFollowers($userId);
+        return response()->json([
+            'code'=> 6000,
+            'message' => '关注列表为',
+            'data' => $users
+        ]);
+    }
+
+    public function getFollowings(Request $request)
+    {
+        $userId = $request->user->id;
+        $users = $this->userService->getFollowings($userId);
+        return response()->json([
+            'code'=> 6000,
+            'message' => '粉丝列表为',
+            'data' => $users
+        ]);
+    }
+
+    public function followUser(Request $request)
+    {
+        $userId = $request->user->id;
+        $TofollowerId = $request->follower_id;
+        if ($userId == $TofollowerId) {
+            return response()->json([
+                'code' => 6014,
+                'message' => '用户不能关注自己'
+            ]);
+        }
+        if($this->userService->addFollower($userId,$TofollowerId))
+        {
+            return response()->json([
+                'code' => 6000,
+                'message' => '关注成功'
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'code' => 6015,
+                'message' => '已经关注该用户'
+            ]);
+        }
+    }
+
+    public function unFollowUser(Request $request)
+    {
+        $userId = $request->user->id;
+        $TofollowerId = $request->follower_id;
+
+        if ($this->userService->deleteFollower($userId, $TofollowerId)) {
+            return response()->json([
+                'code' => 6000,
+                'message' => '取消关注成功'
+            ]);
+        } else {
+            return response()->json([
+                'code' => 6015,
+                'message' => '未关注该用户'
+            ]);
+        }
     }
 }

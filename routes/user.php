@@ -25,4 +25,8 @@ Route::group(['middleware' => 'token'], function() {
 
     Route::post('/user/bind', 'UserController@bindLoginAccount');
 
+    Route::get('/user/getFollowers', 'UserController@getFollowers');
+    Route::get('/user/getFollowings', 'UserController@getFollowings');
+    Route::get('/user/follow/{follower_id}', 'UserController@followUser');
+    Route::get('/user/unFollow/{follower_id}', 'UserController@unFollowUser');
 });
