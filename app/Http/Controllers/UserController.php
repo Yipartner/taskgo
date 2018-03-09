@@ -143,12 +143,28 @@ class UserController extends Controller
 
     public function getUserInfo(Request $request)
     {
-        $userInfo = $this->userService->getUserInfo($request->user->id);
+        $userId = $request->user->id;
+        $userInfo = $this->userService->getUserInfo($userId);
         return response()->json([
         'code' => 6000,
         'message' => '请求成功',
         'data' => $userInfo
     ]);
+    }
+
+    public function getUserInfoById(Request $request)
+    {
+        $userId = $request->user_id;
+        $allUserInfo = $this->userService->getUserInfo($userId);
+        $userInfo = [];
+        $rules = ['name','avatar','sex','mobile','followers_count','followings_count'];
+        foreach ($rules as $key) {
+            $userInfo[$key] = $allUserInfo[$key];
+        }        return response()->json([
+            'code' => 6000,
+            'message' => '请求成功',
+            'data' => $userInfo
+        ]);
     }
 
     public function updateUserInfo(Request $request)
