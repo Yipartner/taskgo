@@ -52,17 +52,15 @@ class TaskController extends Controller
 
     public function showAcceptTaskByUserAndStatus(Request $request)
     {
-//        $user_id = $request->user->id;
-        $user_id=1;
+        $user_id = $request->user->id;
         $status = $request->task_status;
         $thingTask=[];
         if ($status == 0) {
-            $thingTask=$this->thingService->showTaskByAccepter($user_id)->toArray();
+            $thingTask = $this->thingService->showTaskByAccepter($user_id)->toArray();
         } else {
             $thingTask = $this->thingService->showFinishTaskByAccepter($user_id)->toArray();
         }
-        $waterTask=$this->waterService->showTaskByStatus($status)->toArray();
-        $totalTask=array_merge($thingTask,$waterTask);
+        $totalTask=$thingTask;
         return response()->json([
             'code' => 1000,
             'data' => $totalTask
