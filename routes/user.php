@@ -22,6 +22,7 @@ Route::group(['middleware' => 'token'], function() {
     Route::post('/user/info/addAuth', 'UserController@addAuthInfo');
     Route::get('/user/info/updateStatus', 'UserController@updateAuthStatus');
     Route::post('/user/info/updateLevel', 'UserController@updateLevel');
+    Route::get('/user/info/show/{user_id}', 'UserController@getUserInfoById');
 
     Route::post('/user/bind', 'UserController@bindLoginAccount');
 
