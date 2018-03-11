@@ -9,7 +9,7 @@
 Route::post('/user/register', 'UserController@register');
 Route::post('/user/login', 'UserController@login');
 
-Route::get('/user/token/check','UserController@checkToken');
+Route::get('/user/checkToken/{token}','UserController@checkToken');
 Route::get('/user/getCaptcha/{mobile}','UserController@sendMessage');
 Route::post('/user/forgotPassword','UserController@forgotPassword');
 

@@ -123,7 +123,7 @@ class UserController extends Controller
 
     public function checkToken(Request $request)
     {
-        $checkRes = $this->tokenService->verifyToken($request->tokenStr);
+        $checkRes = $this->tokenService->verifyToken($request->token);
         if($checkRes == -1)
             return response()->json([
                 'code' => 6011,
