@@ -71,6 +71,9 @@ class UserService
         //取前10位 即 1997-07-01 00:00:00 中的年月日
         if ($data['birth'])
             $data['birth'] = substr($data['birth'], 0, 10);
+
+        $followCount = $this->getFollowCount($userId);
+        $data  = array_merge($data,$followCount);
         return $data;
     }
 
@@ -289,4 +292,16 @@ class UserService
             return true;
         }
     }
+
+    public function getFollowCount($userId)
+    {
+        $followersCount = count($this->getFollowers($userId));
+        $followingsCount = count($this->getFollowings($userId));
+        $followCount = [
+            'followers_count' => $followersCount,
+            'followings_count' => $followingsCount
+        ];
+        return $followCount;
+    }
+
 }

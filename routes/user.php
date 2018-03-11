@@ -9,7 +9,7 @@
 Route::post('/user/register', 'UserController@register');
 Route::post('/user/login', 'UserController@login');
 
-Route::get('/user/token/check','UserController@checkToken');
+Route::get('/user/checkToken/{token}','UserController@checkToken');
 Route::get('/user/getCaptcha/{mobile}','UserController@sendMessage');
 Route::post('/user/forgotPassword','UserController@forgotPassword');
 
@@ -22,6 +22,7 @@ Route::group(['middleware' => 'token'], function() {
     Route::post('/user/info/addAuth', 'UserController@addAuthInfo');
     Route::get('/user/info/updateStatus', 'UserController@updateAuthStatus');
     Route::post('/user/info/updateLevel', 'UserController@updateLevel');
+    Route::get('/user/info/show/{user_id}', 'UserController@getUserInfoById');
 
     Route::post('/user/bind', 'UserController@bindLoginAccount');
 
