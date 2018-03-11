@@ -131,13 +131,15 @@ class UserController extends Controller
             ]);
         else if($checkRes == 0)
             return response()->json([
-                'code' => 6012,
-                'message' => 'token过期'
+                'code' => 6000,
+                'message' => 'token过期',
+                'data' => '1'
             ]);
         else
             return response()->json([
                 'code' => 6000,
-                'message' => '验证通过'
+                'message' => '验证通过',
+                'data' => '0'
             ]);
     }
 
