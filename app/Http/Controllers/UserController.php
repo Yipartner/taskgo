@@ -156,13 +156,17 @@ class UserController extends Controller
 
     public function getUserInfoById(Request $request)
     {
+        $nowUserId = $request->user->id;
         $userId = $request->user_id;
         $allUserInfo = $this->userService->getUserInfo($userId);
         $userInfo = [];
         $rules = ['name','avatar','sex','mobile','followers_count','followings_count'];
         foreach ($rules as $key) {
             $userInfo[$key] = $allUserInfo[$key];
-        }        return response()->json([
+        }
+        $is_following = $this->userService->isFollowing($userId,$nowUserId);
+        $userInfo['is_following'] = $is_following;
+        return response()->json([
             'code' => 6000,
             'message' => '请求成功',
             'data' => $userInfo
