@@ -232,7 +232,7 @@ class UserService
     public function getFollowers($userId)
     {
         $userList = DB::table('followers')->where('followers.follower_id', $userId)
-            ->join('users','users.id','=','followers.follower_id')
+            ->join('users','users.id','=','followers.user_id')
             ->select('user_id','name','avatar')
             ->get();
         return $userList;
@@ -241,7 +241,7 @@ class UserService
     public function getFollowings($userId)
     {
         $userList = DB::table('followers')->where('followers.user_id', $userId)
-            ->join('users','users.id','=','followers.user_id')
+            ->join('users','users.id','=','followers.follower_id')
             ->select('follower_id','name','avatar')
             ->get();
         ;
