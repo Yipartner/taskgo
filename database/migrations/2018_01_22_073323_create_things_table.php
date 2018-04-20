@@ -27,6 +27,7 @@ class CreateThingsTable extends Migration
             $table->integer('status')->default(0);
             // 0:发布中 2:发布者点击完成
             $table->integer('finished_by')->nullable();
+            $table->json('cards');
             $table->timestamps();
         });
     }

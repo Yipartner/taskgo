@@ -6,6 +6,7 @@ use App\Services\ThingTaskService;
 use App\Services\UserService;
 use App\Tool\ValidationHelper;
 use Illuminate\Http\Request;
+use function MongoDB\BSON\toJSON;
 
 class ThingController extends Controller
 {
@@ -29,8 +30,10 @@ class ThingController extends Controller
             'type' => 'required',
             'picture_url' => 'required',
             'place' => 'required',
-            'remarks' => 'required'
+            'remarks' => 'required',
+            'cards'=>'required'
         ];
+
         $res = ValidationHelper::validateCheck($request->all(), $rules);
         if ($res->fails()) {
             return response()->json([

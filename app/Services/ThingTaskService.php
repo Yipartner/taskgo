@@ -7,21 +7,33 @@ use Illuminate\Support\Facades\DB;
 
 class ThingTaskService
 {
+    private $cardService;
+    public function __construct(CardService $cardService)
+    {
+        $this->cardService=$cardService;
+    }
 
     public function addTask($taskInfo)
     {
         $time = new Carbon();
-        DB::table('things')->insert([
-            'user_id' => $taskInfo['user_id'],
-            'user_name' => $taskInfo['user_name'],
-            'avatar' => $taskInfo['avatar'],
-            'name' => $taskInfo['name'],
-            'type' => $taskInfo['type'],
-            'picture_url' => $taskInfo['picture_url'],
-            'place' => $taskInfo['place'],
-            'remarks' => $taskInfo['remarks'],
-            'created_at' => $time,
-        ]);
+        DB::transaction(function () use ($taskInfo, $time) {
+            $cards=json_decode($taskInfo['cards']);
+            foreach ($cards as $key =>$value){
+                $res=$this->cardService->removeUserCard($taskInfo['user_id'],$key,$value);
+            }
+            DB::table('things')->insert([
+                'user_id' => $taskInfo['user_id'],
+                'user_name' => $taskInfo['user_name'],
+                'avatar' => $taskInfo['avatar'],
+                'name' => $taskInfo['name'],
+                'type' => $taskInfo['type'],
+                'picture_url' => $taskInfo['picture_url'],
+                'place' => $taskInfo['place'],
+                'remarks' => $taskInfo['remarks'],
+                'card' => $taskInfo['cards'],
+                'created_at' => $time
+            ]);
+        });
     }
 
     public function acceptTask($taskInfo)
@@ -51,21 +63,25 @@ class ThingTaskService
     public function finishTask($taskInfo)
     {
         $time = new Carbon();
-        DB::transaction(function () use ($taskInfo, $time) {
+        $card=DB::table('things')->where('id',$taskInfo['task_id'])->value('cards');
+        DB::transaction(function () use ($taskInfo, $time,$card) {
 
             DB::table('things')->where('id', $taskInfo['task_id'])->update([
                 'status' => 2,
                 'finished_by' => $taskInfo['user_id']
             ]);
-
+            foreach ($card as $key=>$value){
+                $this->cardService->addUserCard($taskInfo['user_id'],$key,$value);
+            }
             DB::table('tasks')->where('task_type', $taskInfo['task_type'])->where('task_id', $taskInfo['task_id'])->delete();
+
 
         });
     }
 
     public function showTaskList()
     {
-        $taskList = DB::table('things')->orderby('status')->get();
+        $taskList = DB::table('things')->orderby('status')->orderBy('cards->to_top','desc')->orderBy('cards->good_man')->get();
         return $taskList;
     }
 

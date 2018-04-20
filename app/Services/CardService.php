@@ -93,6 +93,10 @@ class CardService
                 ->where('user_id',$userId)
                 ->where('card_id',$cardId)
                 ->decrement('number',$cardNumber);
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
