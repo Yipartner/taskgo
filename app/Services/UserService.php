@@ -14,21 +14,31 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    private $cardService;
+    public function __construct(CardService $cardService)
+    {
+        $this->cardService = $cardService;
+    }
 
     public function register($userInfo)
     {
         if ($this->isUserExist($userInfo)) {
             return false;
         } else {
-            $time = new Carbon();
             //name 默认昵称为登录号码
-            DB::table('users')->insert([
-                'name' => $userInfo['value'],
-                $userInfo['type'] => $userInfo['value'],
-                'password' => isset($userInfo['password']) ? bcrypt($userInfo['password']) : null,
-                'created_at' => $time,
-            ]);
-            return true;
+            $flag = false;
+            DB::transaction(function () use ($userInfo,&$flag) {
+                $time = new Carbon();
+                $userId = DB::table('users')->insertGetId([
+                    'name' => $userInfo['value'],
+                    $userInfo['type'] => $userInfo['value'],
+                    'password' => isset($userInfo['password']) ? bcrypt($userInfo['password']) : null,
+                    'created_at' => $time,
+                ]);
+                $this->cardService->addUserCard($userId, 1, 6);
+                $flag = true;
+            });
+            return $flag;
         }
     }
 

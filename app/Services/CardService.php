@@ -75,7 +75,9 @@ class CardService
     {
         $cards = DB::table('user_cards')
             ->where('user_id',$userId)
-            ->pluck('card_id', 'number');
+            ->join('cards','cards.id','=','card_id')
+            ->select('card_id','use','picture','price','content','number')
+            ->get();
         return $cards;
     }
 

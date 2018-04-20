@@ -15,6 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/version', function () {
+    return response([
+        'code' => 1000,
+        'message' => '请求成功',
+        'data'  => '1.0.0'
+    ]);
+});
+
 include 'water.php';
 
 include 'thing.php';
@@ -22,3 +30,5 @@ include 'thing.php';
 include 'user.php';
 
 include 'task.php';
+
+include 'card.php';
